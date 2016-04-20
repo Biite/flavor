@@ -58,14 +58,26 @@ extern NSString* const kBackendVersion;
 + (void)getRefreshUserWithCompletionHandler:(void(^)(NSError * error, id result))completionHandler;
 + (void)getUserInfo:(NSString *)userID withCompletionHandler:(void(^)(NSError * error, id result))completionHandler;
 
-//+ (void)getAllRecipes
-
-+ (void)getSellerRecipes:(NSString *)userID withCompletionHandler:(void(^)(NSError * error, id result))completionHandler;
-
 + (void)setDeviceToken:(NSString *)deviceToken withCompletionHandler:(void(^)(NSError * error, id result))completionHandler;
 
 + (void)getFavoriteUsersWithCompletionHandler:(void(^)(NSError * error, id result))completionHandler;
 + (void)addFavoriteUser:(NSString *)userID withCompletionHandler:(void(^)(NSError * error, id result))completionHandler;
 + (void)delFavoriteUser:(NSString *)userID withCompletionHandler:(void(^)(NSError * error, id result))completionHandler;
+
++ (void)postNewRecipe:(NSString *)recipeName
+          ingredients:(NSString *)ingredients
+          portionSize:(NSString *)portionSize
+             prepTime:(NSString *)prepTime
+            orderMode:(NSString *)orderMode
+                price:(NSString *)price
+         privacyTerms:(NSString *)privacyTerms
+             imageURL:(NSString *)imageURL
+           imageWidth:(NSString *)imageWidth
+          imageHeight:(NSString *)imageHeight
+withCompletionHandler:(void(^)(NSError * error, id result))completionHandler;
+
++ (void)getAllRecipesWithCompletionHandler:(void(^)(NSError * error, id result))completionHandler;
+
++ (void)getSellerRecipes:(NSString *)userID withCompletionHandler:(void(^)(NSError * error, id result))completionHandler;
 
 @end

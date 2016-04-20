@@ -7,9 +7,20 @@
 //
 
 #import "BFRecipe.h"
+#import <SDWebImage/SDWebImageManager.h>
 
 
 @implementation BFRecipe
+
++ (BFRecipe *)recipeWithDictionary:(NSDictionary *)recipeDict
+{
+    if(!recipeDict || ![recipeDict isKindOfClass:[NSDictionary class]])
+    {
+        return nil;
+    }
+    
+    return [[BFRecipe alloc] initWithDictionary:recipeDict];
+}
 
 - (instancetype)initWithDictionary:(NSDictionary *)recipeDict
 {
@@ -26,16 +37,30 @@
 {
 //    NSLog(@"Recipe Dict %@", recipeDict);
     
-    self.recipeName = recipeDict[@"name"];
-    self.recipeImageURL = recipeDict[@"imageURL"];
-    self.recipeDescription = recipeDict[@"description"];
-    self.recipeContents = recipeDict[@"contents"];
-    self.recipePrice = recipeDict[@"price"];
+    self.recipeName = recipeDict[@"recipeName"];
+    self.ingredients = recipeDict[@"ingredients"];
+    self.portionSize = recipeDict[@"portionSize"];
     self.prepareTime = recipeDict[@"prepareTime"];
+    self.orderMode = recipeDict[@"orderMode"];
+    self.price = recipeDict[@"price"];
+    self.privacyTerms = recipeDict[@"privacyTerms"];
+    self.imageURL = recipeDict[@"imageURL"][@"url"];
+    self.imageWidth = recipeDict[@"imageURL"][@"width"];
+    self.imageHeight = recipeDict[@"imageURL"][@"height"];
     
-//     *seller = [[BFSeller alloc] initWithDictionary:recipeDict[@"seller"]];
-//    self.recipeSeller = seller;
-
+    self.owner = [BFUser userWithDictionary:recipeDict[@"owner"]];
+    
+    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:self.imageURL]
+                                                    options:(self.wantsNewImage ? SDWebImageRefreshCached :0)
+                                                   progress:nil
+                                                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL)
+     {
+         if(!error)
+         {
+             self.image = image;
+             self.wantsNewImage=NO;
+         }
+     }];
 }
 
 @end

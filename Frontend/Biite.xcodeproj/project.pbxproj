@@ -15,7 +15,7 @@
 		EA0C34C81C98417700F56953 /* BFAreaPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0C34C71C98417700F56953 /* BFAreaPicker.m */; };
 		EA0C34D11C989D9600F56953 /* BFRecipeDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0C34D01C989D9600F56953 /* BFRecipeDetailVC.m */; };
 		EA0C34D41C98A1A300F56953 /* BFRecipeOrderVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0C34D31C98A1A300F56953 /* BFRecipeOrderVC.m */; };
-		EA0C34D81C98A31200F56953 /* BFOrderVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0C34D71C98A31200F56953 /* BFOrderVC.m */; };
+		EA0C34D81C98A31200F56953 /* BFPaymentLinkVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0C34D71C98A31200F56953 /* BFPaymentLinkVC.m */; };
 		EA0C34DB1C98AC3E00F56953 /* BFScanCardVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0C34DA1C98AC3E00F56953 /* BFScanCardVC.m */; };
 		EA0C34E11C98E85500F56953 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0C34E01C98E85500F56953 /* LaunchScreen.xib */; };
 		EA84515B1C90C95400DAF55B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EA84515A1C90C95400DAF55B /* main.m */; };
@@ -27,10 +27,9 @@
 		EA8451881C922CAF00DAF55B /* BFLocationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8451871C922CAF00DAF55B /* BFLocationVC.m */; };
 		EA84518C1C925B2300DAF55B /* BFRecipesExploreVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA84518B1C925B2300DAF55B /* BFRecipesExploreVC.m */; };
 		EA84518F1C925BC300DAF55B /* BFRecipesTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EA84518E1C925BC300DAF55B /* BFRecipesTableCell.m */; };
-		EA8451931C925CC100DAF55B /* BFRecipesInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8451921C925CC100DAF55B /* BFRecipesInfoVC.m */; };
+		EA8451931C925CC100DAF55B /* BFSellerRecipesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8451921C925CC100DAF55B /* BFSellerRecipesVC.m */; };
 		EA8451991C92FBCB00DAF55B /* BFAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8451981C92FBCB00DAF55B /* BFAPI.m */; };
 		EA8451A11C92FC2A00DAF55B /* BFSellerInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8451A01C92FC2A00DAF55B /* BFSellerInfoVC.m */; };
-		EA8451A41C92FC3B00DAF55B /* BFBuyerInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8451A31C92FC3B00DAF55B /* BFBuyerInfoVC.m */; };
 		EA8451AF1C931A6000DAF55B /* BFBaseVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8451AE1C931A6000DAF55B /* BFBaseVC.m */; };
 		EA8451D01C9556C700DAF55B /* UIColor+FlatColors.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8451CF1C9556C700DAF55B /* UIColor+FlatColors.m */; };
 		EA8451EB1C96E99400DAF55B /* UIViewExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8451EA1C96E99400DAF55B /* UIViewExtensions.m */; };
@@ -89,8 +88,8 @@
 		EA0C34D01C989D9600F56953 /* BFRecipeDetailVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFRecipeDetailVC.m; sourceTree = "<group>"; };
 		EA0C34D21C98A1A300F56953 /* BFRecipeOrderVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFRecipeOrderVC.h; sourceTree = "<group>"; };
 		EA0C34D31C98A1A300F56953 /* BFRecipeOrderVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFRecipeOrderVC.m; sourceTree = "<group>"; };
-		EA0C34D61C98A31200F56953 /* BFOrderVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFOrderVC.h; sourceTree = "<group>"; };
-		EA0C34D71C98A31200F56953 /* BFOrderVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFOrderVC.m; sourceTree = "<group>"; };
+		EA0C34D61C98A31200F56953 /* BFPaymentLinkVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFPaymentLinkVC.h; sourceTree = "<group>"; };
+		EA0C34D71C98A31200F56953 /* BFPaymentLinkVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFPaymentLinkVC.m; sourceTree = "<group>"; };
 		EA0C34D91C98AC3E00F56953 /* BFScanCardVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFScanCardVC.h; sourceTree = "<group>"; };
 		EA0C34DA1C98AC3E00F56953 /* BFScanCardVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFScanCardVC.m; sourceTree = "<group>"; };
 		EA0C34E01C98E85500F56953 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
@@ -110,14 +109,12 @@
 		EA84518B1C925B2300DAF55B /* BFRecipesExploreVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFRecipesExploreVC.m; sourceTree = "<group>"; };
 		EA84518D1C925BC300DAF55B /* BFRecipesTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFRecipesTableCell.h; sourceTree = "<group>"; };
 		EA84518E1C925BC300DAF55B /* BFRecipesTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFRecipesTableCell.m; sourceTree = "<group>"; };
-		EA8451911C925CC100DAF55B /* BFRecipesInfoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFRecipesInfoVC.h; sourceTree = "<group>"; };
-		EA8451921C925CC100DAF55B /* BFRecipesInfoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFRecipesInfoVC.m; sourceTree = "<group>"; };
+		EA8451911C925CC100DAF55B /* BFSellerRecipesVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFSellerRecipesVC.h; sourceTree = "<group>"; };
+		EA8451921C925CC100DAF55B /* BFSellerRecipesVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFSellerRecipesVC.m; sourceTree = "<group>"; };
 		EA8451971C92FBCB00DAF55B /* BFAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFAPI.h; sourceTree = "<group>"; };
 		EA8451981C92FBCB00DAF55B /* BFAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFAPI.m; sourceTree = "<group>"; };
 		EA84519F1C92FC2A00DAF55B /* BFSellerInfoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFSellerInfoVC.h; sourceTree = "<group>"; };
 		EA8451A01C92FC2A00DAF55B /* BFSellerInfoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFSellerInfoVC.m; sourceTree = "<group>"; };
-		EA8451A21C92FC3B00DAF55B /* BFBuyerInfoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFBuyerInfoVC.h; sourceTree = "<group>"; };
-		EA8451A31C92FC3B00DAF55B /* BFBuyerInfoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFBuyerInfoVC.m; sourceTree = "<group>"; };
 		EA8451AD1C931A6000DAF55B /* BFBaseVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFBaseVC.h; sourceTree = "<group>"; };
 		EA8451AE1C931A6000DAF55B /* BFBaseVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFBaseVC.m; sourceTree = "<group>"; };
 		EA8451CE1C9556C700DAF55B /* UIColor+FlatColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+FlatColors.h"; sourceTree = "<group>"; };
@@ -250,8 +247,8 @@
 		EA0C34CE1C98995200F56953 /* Recipes */ = {
 			isa = PBXGroup;
 			children = (
-				EA8451911C925CC100DAF55B /* BFRecipesInfoVC.h */,
-				EA8451921C925CC100DAF55B /* BFRecipesInfoVC.m */,
+				EA8451911C925CC100DAF55B /* BFSellerRecipesVC.h */,
+				EA8451921C925CC100DAF55B /* BFSellerRecipesVC.m */,
 				EA0C34CF1C989D9600F56953 /* BFRecipeDetailVC.h */,
 				EA0C34D01C989D9600F56953 /* BFRecipeDetailVC.m */,
 				EA0C34D21C98A1A300F56953 /* BFRecipeOrderVC.h */,
@@ -263,8 +260,8 @@
 		EA0C34D51C98A2DD00F56953 /* ECommerce */ = {
 			isa = PBXGroup;
 			children = (
-				EA0C34D61C98A31200F56953 /* BFOrderVC.h */,
-				EA0C34D71C98A31200F56953 /* BFOrderVC.m */,
+				EA0C34D61C98A31200F56953 /* BFPaymentLinkVC.h */,
+				EA0C34D71C98A31200F56953 /* BFPaymentLinkVC.m */,
 				EA0C34D91C98AC3E00F56953 /* BFScanCardVC.h */,
 				EA0C34DA1C98AC3E00F56953 /* BFScanCardVC.m */,
 			);
@@ -375,7 +372,6 @@
 				EA0C34CE1C98995200F56953 /* Recipes */,
 				EA0C34D51C98A2DD00F56953 /* ECommerce */,
 				EA84519D1C92FC0B00DAF55B /* Seller */,
-				EA84519E1C92FC1200DAF55B /* Buyer */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -409,15 +405,6 @@
 				EA8451A01C92FC2A00DAF55B /* BFSellerInfoVC.m */,
 			);
 			name = Seller;
-			sourceTree = "<group>";
-		};
-		EA84519E1C92FC1200DAF55B /* Buyer */ = {
-			isa = PBXGroup;
-			children = (
-				EA8451A21C92FC3B00DAF55B /* BFBuyerInfoVC.h */,
-				EA8451A31C92FC3B00DAF55B /* BFBuyerInfoVC.m */,
-			);
-			name = Buyer;
 			sourceTree = "<group>";
 		};
 		EA8451A51C92FCB200DAF55B /* DataModel */ = {
@@ -723,7 +710,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA0069A71CA7CFA70074BA82 /* BFOrderMenuTableCell.m in Sources */,
-				EA8451A41C92FC3B00DAF55B /* BFBuyerInfoVC.m in Sources */,
 				EA84518F1C925BC300DAF55B /* BFRecipesTableCell.m in Sources */,
 				EA8451881C922CAF00DAF55B /* BFLocationVC.m in Sources */,
 				EA84515E1C90C95400DAF55B /* AppDelegate.m in Sources */,
@@ -743,7 +729,7 @@
 				EAE132CC1C9715DC0052D347 /* BFSearchFilterVC.m in Sources */,
 				EA8CBC711CA9C807004B2008 /* BFWalletTableCell.m in Sources */,
 				EA8451D01C9556C700DAF55B /* UIColor+FlatColors.m in Sources */,
-				EA8451931C925CC100DAF55B /* BFRecipesInfoVC.m in Sources */,
+				EA8451931C925CC100DAF55B /* BFSellerRecipesVC.m in Sources */,
 				EAE4CE001CBCE4D000082D50 /* BFMyUser.m in Sources */,
 				EA0C34C81C98417700F56953 /* BFAreaPicker.m in Sources */,
 				EA8451A11C92FC2A00DAF55B /* BFSellerInfoVC.m in Sources */,
@@ -754,7 +740,7 @@
 				EA0069AC1CA808F90074BA82 /* MSTDropDownPresentationController.m in Sources */,
 				EA8451AF1C931A6000DAF55B /* BFBaseVC.m in Sources */,
 				EAF94F311CA6805D00C11E41 /* BFRecipe.m in Sources */,
-				EA0C34D81C98A31200F56953 /* BFOrderVC.m in Sources */,
+				EA0C34D81C98A31200F56953 /* BFPaymentLinkVC.m in Sources */,
 				EA8451671C90C95400DAF55B /* Biite.xcdatamodeld in Sources */,
 				EAE4CE091CBD5C4F00082D50 /* BFSignupVC.m in Sources */,
 				EA0C34C41C9812DC00F56953 /* BFRangeSlider.m in Sources */,
@@ -898,7 +884,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = tparker.Biite;
+				PRODUCT_BUNDLE_IDENTIFIER = Biite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -926,7 +912,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = tparker.Biite;
+				PRODUCT_BUNDLE_IDENTIFIER = Biite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

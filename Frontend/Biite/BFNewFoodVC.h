@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Cloudinary.h"
 
-@interface BFNewFoodVC : UIViewController
+@interface BFNewFoodVC : UIViewController <CLUploaderDelegate>
 
 @end

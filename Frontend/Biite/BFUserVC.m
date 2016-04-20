@@ -13,6 +13,7 @@
 #import "BFWalletTableCell.h"
 #import "BFFavoriteTableCell.h"
 #import "BFNewFoodVC.h"
+#import <SVProgressHUD.h>
 
 
 @interface BFUserVC () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
@@ -47,6 +48,8 @@
 @property (strong, nonatomic) NSArray *favoriteSets;
 @property (strong, nonatomic) NSMutableArray *onlineSets;
 @property (strong, nonatomic) NSMutableArray *offlineSets;
+@property (nonatomic) BOOL isShowOnlineFavorites;
+@property (nonatomic) BOOL isShowOfflineFavorites;
 
 @end
 
@@ -86,8 +89,6 @@
     
     self.walletImageView.image = [UIImage imageNamed:@"wallet_setting_img"];
     
-    self.tableContentView.hidden = true;
-
     //    if (animated)
     {
         CGRect orign1 = self.userInfoView.frame;
@@ -177,7 +178,7 @@
 
 - (IBAction)onClickBack:(id)sender
 {
-    [BFMyUser logout];
+//    [BFMyUser logout];
     [self dismissUserViewController];
 }
 
@@ -193,35 +194,29 @@
 {
     if (!self.isSelectedWallet)
     {
-        self.isSelectedWallet = true;
-        self.dismissesOnBackgroundTap = false;
-        
-        self.walletImageView.image = [UIImage imageNamed:@"wallet_setting_sel_img"];
-        
-        [self.tableView registerNib:[UINib nibWithNibName:@"BFWalletTableCell" bundle:nil] forCellReuseIdentifier:@"BFWalletTableCell"];
-        [self.tableView reloadData];
-        
         [self showWallet];
     }
     else
     {
-        self.isSelectedWallet = false;
-        self.dismissesOnBackgroundTap = true;
-        
-        self.walletImageView.image = [UIImage imageNamed:@"wallet_setting_img"];
-        
         [self hideWallet];
     }
 }
 
 - (void)showWallet
 {
+    self.isSelectedWallet = true;
+    self.dismissesOnBackgroundTap = false;
+    
+    self.walletImageView.image = [UIImage imageNamed:@"wallet_setting_sel_img"];
+    
     if (self.isSelectedFavorite)
     {
         self.isSelectedFavorite = false;
         
+        self.favoriteImageView.image = [UIImage imageNamed:@"favorite_setting_img"];
+        
         CGRect orign1 = self.tableContentView.frame;
-        orign1.size.height = orign1.size.height - self.buyerVideoView.frame.size.height;
+        //orign1.size.height = orign1.size.height - self.buyerVideoView.frame.size.height;
         orign1.origin.y = self.userInfoView.frame.size.height + self.buttonView.frame.size.height - orign1.size.height;
         self.tableContentView.frame = orign1;
         
@@ -229,6 +224,9 @@
         orign2.origin.y = self.userInfoView.frame.size.height + self.buttonView.frame.size.height;
         self.buyerVideoView.frame = orign2;
     }
+    
+    [self.tableView registerNib:[UINib nibWithNibName:@"BFWalletTableCell" bundle:nil] forCellReuseIdentifier:@"BFWalletTableCell"];
+    [self.tableView reloadData];
     
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         
@@ -245,6 +243,11 @@
 
 - (void)hideWallet
 {
+    self.isSelectedWallet = false;
+    self.dismissesOnBackgroundTap = true;
+    
+    self.walletImageView.image = [UIImage imageNamed:@"wallet_setting_img"];
+    
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         
         CGRect new1 = self.tableContentView.frame;
@@ -262,35 +265,29 @@
 {
     if (!self.isSelectedFavorite)
     {
-        self.isSelectedFavorite = true;
-        self.dismissesOnBackgroundTap = false;
-        
-        self.favoriteImageView.image = [UIImage imageNamed:@"wallet_setting_sel_img"];
-        
-        [self.tableView registerNib:[UINib nibWithNibName:@"BFFavoriteTableCell" bundle:nil] forCellReuseIdentifier:@"BFFavoriteTableCell"];
-        [self.tableView reloadData];
-        
         [self showFavorites];
     }
     else
     {
-        self.isSelectedWallet = false;
-        self.dismissesOnBackgroundTap = true;
-        
-        self.favoriteImageView.image = [UIImage imageNamed:@"wallet_setting_img"];
-        
         [self hideFavorites];
     }
 }
 
 - (void)showFavorites
 {
+    self.isSelectedFavorite = true;
+    self.dismissesOnBackgroundTap = false;
+    
+    self.favoriteImageView.image = [UIImage imageNamed:@"favorite_setting_sel_img"];
+    
     if (self.isSelectedWallet)
     {
         self.isSelectedWallet = false;
         
+        self.walletImageView.image = [UIImage imageNamed:@"wallet_setting_img"];
+        
         CGRect orign1 = self.tableContentView.frame;
-        orign1.size.height = orign1.size.height + self.buyerVideoView.frame.size.height;
+        //orign1.size.height = orign1.size.height + self.buyerVideoView.frame.size.height;
         orign1.origin.y = self.userInfoView.frame.size.height + self.buttonView.frame.size.height - orign1.size.height;
         self.tableContentView.frame = orign1;
         
@@ -298,6 +295,13 @@
         orign2.origin.y = self.userInfoView.frame.size.height + self.buttonView.frame.size.height;
         self.buyerVideoView.frame = orign2;
     }
+    
+    self.isShowOnlineFavorites = true;
+    self.isShowOfflineFavorites = false;
+    self.favoriteSets = @[self.onlineSets, @[]];
+    
+    [self.tableView registerNib:[UINib nibWithNibName:@"BFFavoriteTableCell" bundle:nil] forCellReuseIdentifier:@"BFFavoriteTableCell"];
+    [self.tableView reloadData];
     
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         
@@ -314,6 +318,11 @@
 
 - (void)hideFavorites
 {
+    self.isSelectedFavorite = false;
+    self.dismissesOnBackgroundTap = true;
+    
+    self.favoriteImageView.image = [UIImage imageNamed:@"favorite_setting_img"];
+    
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         
         CGRect new1 = self.tableContentView.frame;
@@ -326,10 +335,10 @@
         
     } completion:nil];
     
-    CGRect new3 = self.tableContentView.frame;
-    new3.size.height = new3.size.height - self.buyerVideoView.frame.size.height;
-    new3.origin.y = self.userInfoView.frame.size.height + self.buttonView.frame.size.height - new3.size.height;
-    self.tableContentView.frame = new3;
+//    CGRect new3 = self.tableContentView.frame;
+//    new3.size.height = new3.size.height - self.buyerVideoView.frame.size.height;
+//    new3.origin.y = self.userInfoView.frame.size.height + self.buttonView.frame.size.height - new3.size.height;
+//    self.tableContentView.frame = new3;
 }
 
 - (IBAction)onClickSellFood:(id)sender
@@ -364,25 +373,41 @@
 
 - (void)loadFavorites
 {
+    [SVProgressHUD show];
+
     [self.onlineSets removeAllObjects];
     [self.offlineSets removeAllObjects];
 
     [BFAPI getFavoriteUsersWithCompletionHandler:^(NSError *error, id result)
     {
-        for (NSDictionary *dict in result[@"user"])
-        {
-            BFUser *user = [BFUser userWithDictionary:dict];
-            if (user.onlineStatus)
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SVProgressHUD dismiss];
+            
+            if (!error)
             {
-                [self.onlineSets addObject:user];
+                for (NSDictionary *dict in result[@"user"])
+                {
+                    BFUser *user = [BFUser userWithDictionary:dict];
+                    if (user.onlineStatus)
+                    {
+                        [self.onlineSets addObject:user];
+                    }
+                    else
+                    {
+                        [self.offlineSets addObject:user];
+                    }
+                }
+                
+                if (self.isSelectedFavorite)
+                {
+                    [self.tableView reloadData];
+                }
             }
             else
             {
-                [self.offlineSets addObject:user];
+                
             }
-        }
-        
-        self.favoriteSets = @[self.onlineSets, self.offlineSets];
+        });
     }];
 }
 
@@ -395,9 +420,13 @@
     {
         return 1;
     }
-    else
+    else if (self.isSelectedFavorite)
     {
         return 2;
+    }
+    else
+    {
+        return 0;
     }
 }
 
@@ -407,9 +436,13 @@
     {
         return [self.paymentSets count];
     }
-    else
+    else if (self.isSelectedFavorite)
     {
         return  [self.favoriteSets[section] count];
+    }
+    else
+    {
+        return 0;
     }
 }
 
@@ -479,7 +512,7 @@
         
         return cell;
     }
-    else
+    else if (self.isSelectedFavorite)
     {
         BFFavoriteTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BFFavoriteTableCell"];
         
@@ -503,52 +536,80 @@
             [cell.statusImageView setImage:[UIImage imageNamed:@"offline_icon"]];
         }
         
-        NSString *str = [NSString stringWithFormat:@"%ld%ld",(long)indexPath.section+1,(long)indexPath.row];
+        cell.deleteFavoriteButton.tag = indexPath.section * 1000 + indexPath.row;
+        [cell.deleteFavoriteButton addTarget:self action:@selector(delFavorite:) forControlEvents:UIControlEventTouchUpInside];
         
-        [user retrieveProfileImageWithCompletionHandler:^(NSError * error, UIImage *image, id key)
-        {
-            cell.sellerImageView.image = image;
-        } andKey:str];
+        cell.sellerImageView.image = user.profileImage;
+//        NSString *str = [NSString stringWithFormat:@"%ld%ld",(long)indexPath.section+1,(long)indexPath.row];
+//        [user retrieveProfileImageWithCompletionHandler:^(NSError * error, UIImage *image, id key)
+//        {
+//            cell.sellerImageView.image = image;
+//        } andKey:str];
      
         return cell;
+    }
+    else
+    {
+        return nil;
     }
 }
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 30)];
-    
     if (self.isSelectedFavorite)
     {
-        UIImageView *imageHeader = [UIImageView alloc] initWithImage:[UIImage imageNamed:@""]
-        UILabel *labelHeader = [[UILabel alloc]initWithFrame:CGRectMake(8, 0, headerView.frame.size.width-8, headerView.frame.size.height)];
-        labelHeader.font = [UIFont fontWithName:@"Helvetica-Bold" size:13];
-        labelHeader.textColor = [UIColor lightGrayColor];
-        if (section==0)
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 40)];
+        
+        UIImageView *imageHeader = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow_down_image1"]];
+        UILabel *labelHeader = [[UILabel alloc] initWithFrame:CGRectMake(25, 0, 40, 28)];
+        [labelHeader setFont:[UIFont systemFontOfSize:13]];
+        [labelHeader setTextColor:[UIColor whiteColor]];
+        UIButton *statusButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 70, 28)];
+        statusButton.tag = section;
+        [statusButton addTarget:self action:@selector(showFavorites:) forControlEvents:UIControlEventTouchUpInside];
+        
+        if (section == 0)
         {
-            labelHeader.text=@"Following";
+            if (!self.isShowOnlineFavorites)
+            {
+                [imageHeader setImage:[UIImage imageNamed:@"arrow_down_image2"]];
+            }
+            
+            labelHeader.text = @"online";
         }
-        else
+        else if (section == 1)
         {
-            labelHeader.text=@"Followers";
+            if (!self.isShowOfflineFavorites)
+            {
+                [imageHeader setImage:[UIImage imageNamed:@"arrow_down_image2"]];
+            }
+            
+            labelHeader.text = @"offline";
         }
         
+        [headerView addSubview:imageHeader];
         [headerView addSubview:labelHeader];
+        [headerView addSubview:statusButton];
+        
+        return headerView;
     }
-    return headerView;
+    else
+    {
+        return nil;
+    }
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    CGFloat headerHeight = 30;
-//    if (self.groupArray.count==1)
-//    {
-//        return 0;
-//    }
-//    else{
-//        return  headerHeight;
-//    }
-//}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (self.isSelectedFavorite)
+    {
+        return 40;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -567,6 +628,68 @@
     NSLog(@"select ; %ld", (long)indexPath.row);
 }
 
+- (void)showFavorites:(UIButton*)sender
+{
+    NSInteger pressed = sender.tag;
+    
+    NSArray *onlineArray = [self.favoriteSets objectAtIndex:0];
+    NSArray *offlineArray = [self.favoriteSets objectAtIndex:1];
+    
+    if (pressed == 0)
+    {
+        if (self.isShowOnlineFavorites)
+        {
+            self.isShowOnlineFavorites = false;
+            self.favoriteSets = @[@[], offlineArray];
+        }
+        else
+        {
+            self.isShowOnlineFavorites = true;
+            self.favoriteSets = @[self.onlineSets, offlineArray];
+        }
+    }
+    else
+    {
+        if (self.isShowOfflineFavorites)
+        {
+            self.isShowOfflineFavorites = false;
+            self.favoriteSets = @[onlineArray, @[]];
+        }
+        else
+        {
+            self.isShowOfflineFavorites = true;
+            self.favoriteSets = @[onlineArray, self.offlineSets];
+        }
+    }
+    
+    [self.tableView reloadData];
+}
+
+- (void)delFavorite:(UIButton *)sender
+{
+    NSInteger row = sender.tag % 1000;
+    NSInteger section = (sender.tag - row) / 1000;
+    
+    BFUser *user = self.favoriteSets[section][row];
+    
+    [SVProgressHUD show];
+    
+    [BFAPI delFavoriteUser:user.userID withCompletionHandler:^(NSError *error, id result) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SVProgressHUD dismiss];
+            
+            if (!error)
+            {
+                [self.favoriteSets[section] removeObjectAtIndex:row];
+                [self.tableView reloadData];
+            }
+            else
+            {
+            }
+        });
+    }];
+}
+
 
 #pragma mark - Navigation
 
@@ -579,6 +702,5 @@
 //        [self presentViewController:vc animated:YES completion:nil];
     }
 }
-
 
 @end

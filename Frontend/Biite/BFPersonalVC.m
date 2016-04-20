@@ -129,106 +129,106 @@ NSString* const textViewPlaceholder = @"Short Description";
     }
     
     [self updateProfileImage:self.userInfo[@"pfImage"] withCompletionHandler:^(NSError *error, NSString *imageURL) {
-        if (!error)
-        {
-            self.userInfo[@"profileImageURL"] = imageURL;
-            
-            [self updateCoverImage:self.userInfo[@"cvImage"] withCompletionHandler:^(NSError *error, NSString *imageURL) {
-                if (!error)
-                {
-                    self.userInfo[@"coverImageURL"] = imageURL;
-                    
-                    self.userInfo[@"firstName"] = [[self.firstNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] capitalizedString];
-                    self.userInfo[@"lastName"] = [[self.lastNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] capitalizedString];
-                    self.userInfo[@"gender"] = @"";
-                    self.userInfo[@"biography"] = self.bioTextView.text;
-
-                    [SVProgressHUD show];
-                    
-                    [BFAPI signupWithUsername:self.userInfo[@"username"]
-                                        email:self.userInfo[@"email"]
-                                     password:self.userInfo[@"password"]
-                                    firstName:self.userInfo[@"firstName"]
-                                     lastName:self.userInfo[@"lastName"]
-                                       gender:self.userInfo[@"gender"]
-                                    biography:self.userInfo[@"biography"]
-                              profileImageURL:self.userInfo[@"profileImageURL"]
-                                coverImageURL:self.userInfo[@"coverImageURL"]
-                        withCompletionHandler:^(NSError *error, id result)
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!error)
+            {
+                self.userInfo[@"profileImageURL"] = imageURL;
+                
+                [self updateCoverImage:self.userInfo[@"cvImage"] withCompletionHandler:^(NSError *error, NSString *imageURL) {
+                    if (!error)
                     {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [SVProgressHUD dismiss];
-                            
-                            if (!error)
-                            {
-                                //result doesn't have accessToken inside dictionary.
-                                NSLog(@"user %@",result[@"user"]);
-                                [BFMyUser createNewSharedUserWithDict:result[@"user"]];
-                                
-                                sender.enabled=YES;
-                                
-//                                [self.navigationController popToRootViewControllerAnimated:true];
-                                [self performSegueWithIdentifier:@"GoToRecipesExplore" sender:sender];
-                            }
-                            else
-                            {
-                                NSLog(@"error %@",error);
-                                
-                                NSString *alertString = nil;
-                                NSString *msgString = nil;
-                                if(error.code==430)
-                                {
-                                    alertString = @"User has already been created with that email.";
-                                    msgString = @"Please try again with another email address";
-                                }
-                                else if(error.code==NETWORK_NO_INTERNET)
-                                {
-                                    alertString = @"Please check your cellular connection and try again";
-                                }
-                                else
-                                {
-                                    alertString= @"Unknown Error";
-                                }
-                                
-                                if([UIAlertController class])
-                                {
-                                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:alertString
+                        self.userInfo[@"coverImageURL"] = imageURL;
+                        
+                        self.userInfo[@"firstName"] = [[self.firstNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] capitalizedString];
+                        self.userInfo[@"lastName"] = [[self.lastNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] capitalizedString];
+                        self.userInfo[@"gender"] = @"";
+                        self.userInfo[@"biography"] = self.bioTextView.text;
+                        
+                        [SVProgressHUD show];
+                        
+                        [BFAPI signupWithUsername:self.userInfo[@"username"]
+                                            email:self.userInfo[@"email"]
+                                         password:self.userInfo[@"password"]
+                                        firstName:self.userInfo[@"firstName"]
+                                         lastName:self.userInfo[@"lastName"]
+                                           gender:self.userInfo[@"gender"]
+                                        biography:self.userInfo[@"biography"]
+                                  profileImageURL:self.userInfo[@"profileImageURL"]
+                                    coverImageURL:self.userInfo[@"coverImageURL"]
+                            withCompletionHandler:^(NSError *error, id result)
+                         {
+                                 [SVProgressHUD dismiss];
+                                 
+                                 if (!error)
+                                 {
+                                     //result doesn't have accessToken inside dictionary.
+                                     NSLog(@"user %@",result[@"user"]);
+                                     [BFMyUser createNewSharedUserWithDict:result[@"user"]];
+                                     
+                                     sender.enabled=YES;
+                                     
+                                     //                                [self.navigationController popToRootViewControllerAnimated:true];
+                                     [self performSegueWithIdentifier:@"GoToRecipesExplore" sender:sender];
+                                 }
+                                 else
+                                 {
+                                     NSLog(@"error %@",error);
+                                     
+                                     NSString *alertString = nil;
+                                     NSString *msgString = nil;
+                                     if(error.code==430)
+                                     {
+                                         alertString = @"User has already been created with that email.";
+                                         msgString = @"Please try again with another email address";
+                                     }
+                                     else if(error.code==NETWORK_NO_INTERNET)
+                                     {
+                                         alertString = @"Please check your cellular connection and try again";
+                                     }
+                                     else
+                                     {
+                                         alertString= @"Unknown Error";
+                                     }
+                                     
+                                     if([UIAlertController class])
+                                     {
+                                         UIAlertController* alert = [UIAlertController alertControllerWithTitle:alertString
+                                                                                                        message:msgString
+                                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+                                         
+                                         UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                                                 style:UIAlertActionStyleDefault
+                                                                                               handler:^(UIAlertAction * action) {}];
+                                         
+                                         [alert addAction:defaultAction];
+                                         
+                                         [self presentViewController:alert animated:YES completion:nil];
+                                     }
+                                     else
+                                     {
+                                         UIAlertView* popMessageError = [[UIAlertView alloc] initWithTitle:alertString
                                                                                                    message:msgString
-                                                                                            preferredStyle:UIAlertControllerStyleAlert];
-                                    
-                                    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
-                                                                                            style:UIAlertActionStyleDefault
-                                                                                          handler:^(UIAlertAction * action) {}];
-                                    
-                                    [alert addAction:defaultAction];
-                                    
-                                    [self presentViewController:alert animated:YES completion:nil];
-                                }
-                                else
-                                {
-                                    UIAlertView* popMessageError = [[UIAlertView alloc] initWithTitle:alertString
-                                                                                              message:msgString
-                                                                                             delegate:self
-                                                                                    cancelButtonTitle:@"OK"
-                                                                                    otherButtonTitles:@"", nil];
-                                    [popMessageError show];
-                                }
-                                
-                                sender.enabled=YES;
-                            }
-                        });
-                    }];
-                }
-                else {
-                    sender.enabled = YES;
-                    [self showErrorMessage];
-                }
-            }];
-        }
-        else {
-            sender.enabled = YES;
-            [self showErrorMessage];
-        }
+                                                                                                  delegate:self
+                                                                                         cancelButtonTitle:@"OK"
+                                                                                         otherButtonTitles:@"", nil];
+                                         [popMessageError show];
+                                     }
+                                     
+                                     sender.enabled=YES;
+                                 }
+                         }];
+                    }
+                    else {
+                        sender.enabled = YES;
+                        [self showErrorMessage];
+                    }
+                }];
+            }
+            else {
+                sender.enabled = YES;
+                [self showErrorMessage];
+            }
+        });
     }];
 }
 

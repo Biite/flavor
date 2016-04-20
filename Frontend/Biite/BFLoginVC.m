@@ -30,11 +30,13 @@
 @property (strong, nonatomic) IBOutlet UIImageView *signupImageView;
 
 @property (strong, nonatomic) IBOutlet UITextField *usernameTextField;
-
 @property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
-@property (strong, nonatomic) IBOutlet UIButton *forgotButton;
 
 @property (strong, nonatomic) IBOutlet UITextField *emailTextField;
+
+@property (strong, nonatomic) IBOutlet UIView *loginWithEmailButtonView;
+
+@property (strong, nonatomic) IBOutlet UIView *loginWithFbButtonView;
 
 @property (nonatomic) BOOL isSelectedSignIn;
 
@@ -66,11 +68,14 @@
     
     self.signinView.hidden = false;
     self.signupView.hidden = true;
+    
+    self.loginWithFbButtonView.hidden = false;
+    self.loginWithEmailButtonView.hidden = true;
 
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTouchOverlayView:)];
     gestureRecognizer.delegate = self;
     [self.backView addGestureRecognizer:gestureRecognizer];
-//    [self.titleView addGestureRecognizer:gestureRecognizer];
+    [self.titleView addGestureRecognizer:gestureRecognizer];
     
     self.isEditingTextField = false;
 }
@@ -198,6 +203,20 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     self.isEditingTextField = true;
+}
+
+- (IBAction)userCreditenlChanged:(id)sender
+{
+    if ([self.usernameTextField.text isEqualToString:@""] && [self.passwordTextField.text isEqualToString:@""])
+    {
+        self.loginWithFbButtonView.hidden = false;
+        self.loginWithEmailButtonView.hidden = true;
+    }
+    else
+    {
+        self.loginWithFbButtonView.hidden = true;
+        self.loginWithEmailButtonView.hidden = false;
+    }
 }
 
 - (void)hideKeyboard
@@ -334,44 +353,46 @@
         
         [BFMyUser usernameLogin:self.usernameTextField.text password:self.passwordTextField.text withCompletionHandler:^(NSError *error, BFMyUser *sharedUser)
         {
-            [SVProgressHUD dismiss];
-            
-            if (!error)
-            {
-//                [self performSegueWithIdentifier:@"GoTo" sender:self];
-                [self dismissLoginViewController];
-            }
-            else
-            {
-                NSString* alertStr = nil;
-                NSString* alertMsg = nil;
-                if(error.code == NETWORK_NOT_AUTHORIZED_ERROR_CODE)
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [SVProgressHUD dismiss];
+                
+                if (!error)
                 {
-                    alertStr = @"Try Again!";
-                    alertMsg = @"The login credentials are incorrect";
-                }
-                else if(error.code == NETWORK_NO_INTERNET)
-                {
-                    alertStr = @"No Internet";
-                    alertMsg = @"Try again when there is an internet connection";
+                    //                [self performSegueWithIdentifier:@"GoTo" sender:self];
+                    [self dismissLoginViewController];
                 }
                 else
                 {
-                    alertStr = @"Error!";
+                    NSString* alertStr = nil;
+                    NSString* alertMsg = nil;
+                    if(error.code == NETWORK_NOT_AUTHORIZED_ERROR_CODE)
+                    {
+                        alertStr = @"Try Again!";
+                        alertMsg = @"The login credentials are incorrect";
+                    }
+                    else if(error.code == NETWORK_NO_INTERNET)
+                    {
+                        alertStr = @"No Internet";
+                        alertMsg = @"Try again when there is an internet connection";
+                    }
+                    else
+                    {
+                        alertStr = @"Error!";
+                    }
+                    
+                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:alertStr
+                                                                                   message:alertMsg
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                            style:UIAlertActionStyleDefault
+                                                                          handler:^(UIAlertAction * action) {}];
+                    
+                    [alert addAction:defaultAction];
+                    
+                    [self presentViewController:alert animated:YES completion:nil];
                 }
-                
-                UIAlertController* alert = [UIAlertController alertControllerWithTitle:alertStr
-                                                                               message:alertMsg
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                
-                UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
-                                                                        style:UIAlertActionStyleDefault
-                                                                      handler:^(UIAlertAction * action) {}];
-                
-                [alert addAction:defaultAction];
-                
-                [self presentViewController:alert animated:YES completion:nil];
-            }
+            });
         }];
     }
     else
@@ -459,6 +480,72 @@
     else
     {
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Please enter an email address"
+                                                                       message:nil
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {}];
+        
+        [alert addAction:defaultAction];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+}
+
+- (IBAction)onClickForgotPassword:(id)sender
+{
+    if (self.usernameTextField.text.length>0)
+    {
+        [SVProgressHUD show];
+        
+        [BFAPI forgotPasswordWithEmail:self.usernameTextField.text withCompletionHandler:^(NSError *error)
+         {
+             dispatch_async(dispatch_get_main_queue(), ^{
+                 [SVProgressHUD dismiss];
+                 NSString *alertStr = nil;
+                 NSString *alertMsg = nil;
+                 
+                 if (error)
+                 {
+                     if(error.code==500)
+                     {
+                         alertStr = error.userInfo[BFNetworkErrorMessageKey];
+                         alertMsg = @"Could not find user with that email! Please enter valid email address.";
+                     }
+                     else if (error.code == NETWORK_NO_INTERNET)
+                     {
+                         alertStr = @"Try Again";
+                         alertMsg = @"Try again when there is cellular network";
+                     }
+                     else
+                     {
+                         alertStr=@"Error";
+                     }
+                 }
+                 else
+                 {
+                     alertStr = @"Sent!";
+                     alertMsg = @"A reset password email has been sent to your email address";
+                 }
+                 
+                 UIAlertController* alert = [UIAlertController alertControllerWithTitle:alertStr
+                                                                                message:alertMsg
+                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                 
+                 UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                         style:UIAlertActionStyleDefault
+                                                                       handler:^(UIAlertAction * action) {}];
+                 
+                 [alert addAction:defaultAction];
+                 
+                 [self presentViewController:alert animated:YES completion:nil];
+             });
+         }];
+    }
+    else
+    {
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"You need to fill in your email."
                                                                        message:nil
                                                                 preferredStyle:UIAlertControllerStyleAlert];
         

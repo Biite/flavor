@@ -52,7 +52,10 @@ static NSCache* users = nil;
     self.biography = userDict[@"biography"];
     self.profileImageURL = userDict[@"profileImageURL"];
     self.coverImageURL = userDict[@"coverImageURL"];
-    self.onlineStatus = userDict[@"onlineStatus"];
+    self.onlineStatus = [userDict[@"onlineStatus"] boolValue];
+    
+    [self retrieveProfileImageWithCompletionHandler:^(NSError *error, UIImage *image, id result) {} andKey:nil];
+    [self retrieveCoverImageWithCompletionHandler:^(NSError *error, UIImage *image, id result) {} andKey:nil];
 }
 
 + (instancetype)userForID:(NSString *)userID withCompletionHandler:(void (^)(NSError *, BFUser *))completionHandler
@@ -135,7 +138,8 @@ static NSCache* users = nil;
             self.biography = userDict[@"biography"];
             self.profileImageURL = userDict[@"profileImageURL"];
             self.coverImageURL = userDict[@"coverImageURL"];
-            self.onlineStatus = userDict[@"onlineStatus"];
+            self.onlineStatus = [userDict[@"onlineStatus"] boolValue];
+            
             self.lastActive = [BFUser dateFromString:userDict[@"lastActive"]];
 
             if(completionHandler) {

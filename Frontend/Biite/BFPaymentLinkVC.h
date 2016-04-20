@@ -1,5 +1,5 @@
 //
-//  BFOrderVC.h
+//  BFPaymentLinkVC.h
 //  Biite
 //
 //  Created by JRRJ on 3/15/16.
@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 
-@interface BFOrderVC : UIViewController
+@interface BFPaymentLinkVC : UIViewController
 
 @end

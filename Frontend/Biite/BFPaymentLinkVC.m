@@ -1,21 +1,21 @@
 //
-//  BFOrderVC.m
+//  BFPaymentLinkVC.m
 //  Biite
 //
 //  Created by JRRJ on 3/15/16.
 //  Copyright © 2016 JRRJ. All rights reserved.
 //
 
-#import "BFOrderVC.h"
+#import "BFPaymentLinkVC.h"
 #import "BFScanCardVC.h"
 
 
-@interface BFOrderVC ()
+@interface BFPaymentLinkVC ()
 
 @end
 
 
-@implementation BFOrderVC
+@implementation BFPaymentLinkVC
 
 - (void)viewDidLoad
 {

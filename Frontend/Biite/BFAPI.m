@@ -190,6 +190,8 @@ static const BOOL DEVEL_SERVER = YES;
 
 + (void)forgotPasswordWithEmail:(NSString*)email withCompletionHandler:(void (^)(NSError *))completionHandler
 {
+    email = [email stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
     [self postToRoute:@"user/forgot" withParams:nil withJSONObject:@{@"email":email} withCompletionHandler:^(NSError *error, id result)
     {
          completionHandler(error);
@@ -212,20 +214,10 @@ static const BOOL DEVEL_SERVER = YES;
      }];
 }
 
-//+ (void)getAllRecipes
-
-+ (void)getSellerRecipes:(NSString *)userID withCompletionHandler:(void (^)(NSError *, id))completionHandler
-{
-    [self postToRoute:@"post/getuserexploreposts" withParams:nil withJSONObject:@{@"id":userID} withCompletionHandler:^(NSError *error, id result)
-    {
-        completionHandler(error, result);
-    }];
-}
-
 + (void)setDeviceToken:(NSString *)deviceToken withCompletionHandler:(void (^)(NSError *, id))completionHandler
 {
     NSMutableDictionary* dataDict = [[BFMyUser universalTokenInfo] mutableCopy];
-
+    
     if(!dataDict) return;
     if(!deviceToken) deviceToken = (NSString*)[NSNull null];
     
@@ -233,9 +225,9 @@ static const BOOL DEVEL_SERVER = YES;
     dataDict[@"deviceType"] = @"iOS";
     
     [self postToRoute:@"user/nofitifcations" withParams:nil withJSONObject:dataDict withCompletionHandler:^(NSError *error, id result)
-    {
-        completionHandler(error, result);
-    }];
+     {
+         completionHandler(error, result);
+     }];
 }
 
 + (void)getFavoriteUsersWithCompletionHandler:(void (^)(NSError *, id))completionHandler
@@ -270,28 +262,54 @@ static const BOOL DEVEL_SERVER = YES;
      }];
 }
 
++ (void)postNewRecipe:(NSString *)recipeName
+          ingredients:(NSString *)ingredients
+          portionSize:(NSString *)portionSize
+             prepTime:(NSString *)prepTime
+            orderMode:(NSString *)orderMode
+                price:(NSString *)price
+         privacyTerms:(NSString *)privacyTerms
+             imageURL:(NSString *)imageURL
+           imageWidth:(NSString *)imageWidth
+          imageHeight:(NSString *)imageHeight
+withCompletionHandler:(void (^)(NSError *, id))completionHandler
+{
+    NSMutableDictionary *dict = [[BFMyUser universalTokenInfo] mutableCopy];
+    dict[@"recipeName"] = recipeName;
+    dict[@"ingredients"] = ingredients;
+    dict[@"portionSize"] = portionSize;
+    dict[@"prepareTime"] = prepTime;
+    dict[@"orderMode"] = orderMode;
+    dict[@"price"] = price;
+    dict[@"privacyTerms"] = privacyTerms;
+    dict[@"imageURL"] = imageURL;
+    dict[@"imageWidth"] = imageWidth;
+    dict[@"imageHeight"] = imageHeight;
+    
+    [self postToRoute:@"post/createnewrecipe" withParams:nil withJSONObject:dict withCompletionHandler:^(NSError *error, id result)
+     {
+         completionHandler(error, result);
+     }];
+}
 
++ (void)getAllRecipesWithCompletionHandler:(void (^)(NSError *, id))completionHandler
+{
+    [self postToRoute:@"post/getallrecipes" withParams:nil withJSONObject:[BFMyUser universalTokenInfo] withCompletionHandler:^(NSError *error, id result)
+     {
+         completionHandler(error, result);
+     }];
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
++ (void)getSellerRecipes:(NSString *)userID withCompletionHandler:(void (^)(NSError *, id))completionHandler
+{
+    NSMutableDictionary *dict = [[BFMyUser universalTokenInfo] mutableCopy];
+    dict[@"userID"] = userID;
+    
+    [self postToRoute:@"post/getrecipesbyuser" withParams:nil withJSONObject:dict withCompletionHandler:^(NSError *error, id result)
+    {
+        completionHandler(error, result);
+    }];
+}
 
 
 

@@ -8,10 +8,13 @@
 
 #import "BFSellerInfoVC.h"
 #import "BFRecipesListCollectionCell.h"
+#import "BFAPI.h"
 #import "BFRecipeDetailVC.h"
 #import "BFRecipe.h"
 #import "BFShareMenuVC.h"
 #import "UIImage+ImageUtils.h"
+#import <SDWebImage/SDWebImageManager.h>
+#import <SVProgressHUD.h>
 
 
 @interface BFSellerInfoVC () <UICollectionViewDataSource, UICollectionViewDelegate,  UIImagePickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UINavigationControllerDelegate>
@@ -19,13 +22,14 @@
 @property (strong, atomic) NSMutableArray *recipeSets;
 @property (nonatomic) NSInteger selectedIndex;
 
-@property (strong, nonatomic) IBOutlet UIImageView *sellerProfileBackground;
-@property (strong, nonatomic) IBOutlet UIImageView *sellerPictureImageView;
-@property (strong, nonatomic) IBOutlet UILabel *sellerNameLabel;
-@property (strong, nonatomic) IBOutlet UILabel *sellerLocationLabel;
-@property (strong, nonatomic) IBOutlet UITextView *sellerCareersTextView;
-@property (strong, nonatomic) IBOutlet UIImageView *sellerRatingImageView;
-@property (strong, nonatomic) IBOutlet UILabel *sellerReviewsLabel;
+@property (strong, nonatomic) IBOutlet UIImageView *coverImageView;
+@property (strong, nonatomic) IBOutlet UIImageView *profileImageView;
+@property (strong, nonatomic) IBOutlet UILabel *nameLabel;
+@property (strong, nonatomic) IBOutlet UILabel *locationLabel;
+@property (strong, nonatomic) IBOutlet UITextView *biographyTextView;
+@property (strong, nonatomic) IBOutlet UIImageView *ratingImageView;
+@property (strong, nonatomic) IBOutlet UILabel *reviewsLabel;
+@property (strong, nonatomic) IBOutlet UICollectionView *recipesCollectionView;
 
 @end
 
@@ -37,15 +41,24 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-//    self.sellerProfileBackground.image = [UIImage imageNamed:self.sellerInfo.sellerProfileBackground];
-//    self.sellerPictureImageView.image = [UIImage imageNamed:self.sellerInfo.sellerPictureURL];
-//    self.sellerRatingImageView.image = [UIImage imageNamed:self.sellerInfo.sellerRating];
-//    self.sellerReviewsLabel.text = [self.sellerInfo.sellerReviews stringByAppendingString:@" reviews"];
-//    self.sellerNameLabel.text = [self.sellerInfo.sellerFirstName stringByAppendingString:self.sellerInfo.sellerLastName];
-//    self.sellerLocationLabel.text = self.sellerInfo.sellerLocation;
-//    self.sellerCareersTextView.text = self.sellerInfo.sellerCareers;
+    self.nameLabel.text = self.sellerInfo.displayName;
+    self.biographyTextView.text = self.sellerInfo.biography;
+
+    self.profileImageView.image = self.sellerInfo.profileImage;
+//    [self.sellerInfo retrieveProfileImageWithCompletionHandler:^(NSError *error, UIImage *image, id result) {
+//        self.profileImageView.image = image;
+//    } andKey:nil];
+
+    self.coverImageView.image = self.sellerInfo.coverImage;
+//    [self.sellerInfo retrieveCoverImageWithCompletionHandler:^(NSError *error, UIImage *image, id result) {
+//        self.coverImageView.image = image;
+//    } andKey:nil];
     
     self.recipeSets = [[NSMutableArray alloc] init];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
     [self getRecipes];
 }
 
@@ -67,108 +80,54 @@
 
 - (void)getRecipes
 {
-    // API call
-    NSArray *result = @[@{
-                            @"name": @"Paella Valenciana",
-                            //                             @"imageURL": @"http://cloudniary.com/a.jpg",
-                            @"imageURL": @"sample_recipe_img0",
-                            //                             @"description": @"with fresh seafood and real azafron",
-                            @"description": @"This tasty paella has a bit of everything! Wonderfully comforting, flavoursome and colourful.",
-                            @"contents": @"Rice, azafron, clams, shrimp, fish, red peppers, onions, garlic, sweet peas, tomatos, olive oil salt and pepper",
-                            @"price": @"$25",
-                            @"prepareTime": @"45",
-                            @"seller": @{
-                                    @"name": @"Ricardo Barden",
-                                    @"firstName": @"Ricardo",
-                                    @"lastName": @"Barden",
-                                    //                                         @"pictureURL": @"http://cloudniary.com/profile.jpg",
-                                    @"pictureURL": @"sample_profile_img0",
-                                    @"backgroundURL": @"profile_background",
-                                    @"location": @"Perez McFarland",
-                                    @"careers": @"Born in Barcelona, raised in Denver, loves the flavors from the Catelan suisine and seafood in general. This text box should push the content underneath depending on the length.",
-                                    //                                         @"rating": @"4.0",
-                                    @"rating": @"rating_score_img",
-                                    @"reviews": @"46",
-                                    }
-                            },
-                        @{
-                            @"name": @"Scallop noodles",
-                            //                             @"imageURL": @"http://cloudniary.com/a.jpg",
-                            @"imageURL": @"sample_recipe_img1",
-                            //                             @"description": @"with fresh seafood and real azafron",
-                            @"description": @"This tasty paella has a bit of everything! Wonderfully comforting, flavoursome and colourful.",
-                            @"contents": @"Rice, azafron, clams, shrimp, fish, red peppers, onions, garlic, sweet peas, tomatos, olive oil salt and pepper",
-                            @"price": @"$35",
-                            @"prepareTime": @"55",
-                            @"seller": @{
-                                    @"name": @"Ricardo Barden",
-                                    @"firstName": @"Ricardo",
-                                    @"lastName": @"Barden",
-                                    //                                         @"pictureURL": @"http://cloudniary.com/profile.jpg",
-                                    @"pictureURL": @"sample_profile_img0",
-                                    @"backgroundURL": @"profile_background",
-                                    @"location": @"Perez McFarland",
-                                    @"careers": @"Born in Barcelona, raised in Denver, loves the flavors from the Catelan suisine and seafood in general. This text box should push the content underneath depending on the length.",
-                                    //                                         @"rating": @"4.0",
-                                    @"rating": @"rating_score_img",
-                                    @"reviews": @"46",
-                                    }
-                            },
-                        @{
-                            @"name": @"Paella Valenciana",
-                            //                             @"imageURL": @"http://cloudniary.com/a.jpg",
-                            @"imageURL": @"sample_recipe_img0",
-                            //                             @"description": @"with fresh seafood and real azafron",
-                            @"description": @"This tasty paella has a bit of everything! Wonderfully comforting, flavoursome and colourful.",
-                            @"contents": @"Rice, azafron, clams, shrimp, fish, red peppers, onions, garlic, sweet peas, tomatos, olive oil salt and pepper",
-                            @"price": @"$25",
-                            @"prepareTime": @"45",
-                            @"seller": @{
-                                    @"name": @"Ricardo Barden",
-                                    @"firstName": @"Ricardo",
-                                    @"lastName": @"Barden",
-                                    //                                         @"pictureURL": @"http://cloudniary.com/profile.jpg",
-                                    @"pictureURL": @"sample_profile_img1",
-                                    @"backgroundURL": @"profile_background",
-                                    @"location": @"Perez McFarland",
-                                    @"careers": @"Born in Barcelona, raised in Denver, loves the flavors from the Catelan suisine and seafood in general. This text box should push the content underneath depending on the length.",
-                                    //                                         @"rating": @"4.0",
-                                    @"rating": @"rating_score_img",
-                                    @"reviews": @"43",
-                                    }
-                            },
-                        @{
-                            @"name": @"Scallop noodles",
-                            //                             @"imageURL": @"http://cloudniary.com/a.jpg",
-                            @"imageURL": @"sample_recipe_img1",
-                            //                             @"description": @"with fresh seafood and real azafron",
-                            @"description": @"This tasty paella has a bit of everything! Wonderfully comforting, flavoursome and colourful.",
-                            @"contents": @"Rice, azafron, clams, shrimp, fish, red peppers, onions, garlic, sweet peas, tomatos, olive oil salt and pepper",
-                            @"price": @"$35",
-                            @"prepareTime": @"55",
-                            @"seller": @{
-                                    @"name": @"Ricardo Barden",
-                                    @"firstName": @"Ricardo",
-                                    @"lastName": @"Barden",
-                                    //                                         @"pictureURL": @"http://cloudniary.com/profile.jpg",
-                                    @"pictureURL": @"sample_profile_img1",
-                                    @"backgroundURL": @"profile_background",
-                                    @"location": @"Perez McFarland",
-                                    @"careers": @"Born in Barcelona, raised in Denver, loves the flavors from the Catelan suisine and seafood in general. This text box should push the content underneath depending on the length.",
-                                    //                                         @"rating": @"4.0",
-                                    @"rating": @"rating_score_img",
-                                    @"reviews": @"43",
-                                    }
-                            }
-                        ];
+    [SVProgressHUD show];
     
-    // recipeSets
-    // using recipe
-    for (NSDictionary *dict in result)
+    [self.recipeSets removeAllObjects];
+    
+    [BFAPI getSellerRecipes:self.sellerInfo.userID withCompletionHandler:^(NSError *error, id result)
     {
-        BFRecipe *recipe = [[BFRecipe alloc] initWithDictionary:dict];
-        [self.recipeSets addObject:recipe];
-    }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SVProgressHUD dismiss];
+            
+            if (!error)
+            {
+                for (NSDictionary *dict in result[@"posts"])
+                {
+                    BFRecipe *recipe = [BFRecipe recipeWithDictionary:dict];
+                    [self.recipeSets addObject:recipe];
+                }
+                
+                [self.recipesCollectionView reloadData];
+            }
+            else
+            {
+                
+            }
+        });        
+    }];
+}
+
+- (IBAction)onClickAddToFavs:(id)sender
+{
+    [SVProgressHUD show];
+    
+    [BFAPI addFavoriteUser:self.sellerInfo.userID withCompletionHandler:^(NSError *error, id result)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SVProgressHUD dismiss];
+            
+            if (!error)
+            {
+            }
+            else
+            {                
+            }
+        });
+    }];
+}
+
+- (IBAction)onClickContact:(id)sender
+{
 }
 
 - (IBAction)onClickTakeProfileBackground:(id)sender
@@ -216,11 +175,14 @@
     }
 }
 
+
+#pragma mark - UIImagePickerController Delegate
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     UIImage *img = info[UIImagePickerControllerEditedImage];
     
-    self.sellerProfileBackground.image = [UIImage imageWithImage:img scaledToSize:CGSizeMake(self.sellerProfileBackground.frame.size.width, self.sellerProfileBackground.frame.size.height)];
+    self.coverImageView.image = [UIImage imageWithImage:img scaledToSize:CGSizeMake(self.coverImageView.frame.size.width, self.coverImageView.frame.size.height)];
     
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
@@ -270,14 +232,6 @@
     [self presentViewController:picker animated:YES completion:NULL];
 }
 
-- (IBAction)onClickAddToFavs:(id)sender
-{
-}
-
-- (IBAction)onClickContact:(id)sender
-{
-}
-
 
 #pragma mark - UICollectionView Datasource
 
@@ -301,35 +255,42 @@
     BFRecipe *recipe = self.recipeSets[indexPath.row];
     
     cell.recipeNameLabel.text = recipe.recipeName;
-    cell.priceLabel.text = recipe.recipePrice;
+    cell.priceLabel.text = recipe.price;
     
     cell.recipeButton.tag = indexPath.row;
     [cell.recipeButton addTarget:self action:@selector(displayRecipeDetail:) forControlEvents:UIControlEventTouchUpInside];
     
-//    [user retrieveProfileImageWithCompletionHandler:^(NSError error, UIImage image, id key)
+    cell.recipeImageView.image = recipe.image;
+//    NSString *recipeImageURL = recipe.imageURL;
+//    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:recipeImageURL]
+//                                                    options:SDWebImageRefreshCached
+//                                                   progress:nil
+//                                                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL)
 //     {
-//         imgPhoto.image = image;
-//         
-//     } andKey:@"userpicture"];
-    cell.recipeImageView.image = [UIImage imageNamed:recipe.recipeImageURL];
+//         if (image != NULL)
+//         {
+//             cell.recipeImageView.image = image;
+//         }
+//     }];
     
     return cell;
 }
 
 - (void)displayRecipeDetail:(id)sender
 {
-    self.selectedIndex = 0;
+    UIButton *selected = (UIButton *)sender;
+    self.selectedIndex = selected.tag;
     [self performSegueWithIdentifier:@"GoToRecipeDetail" sender:sender];
 }
 
 
 #pragma mark - UICollectionViewDelegate
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    self.selectedIndex = indexPath.row;
-    [self performSegueWithIdentifier:@"GoToRecipeDetail" sender:nil];
-}
+//
+//- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    self.selectedIndex = indexPath.row;
+//    [self performSegueWithIdentifier:@"GoToRecipeDetail" sender:nil];
+//}
 
 
 #pragma mark - Navigation
@@ -343,7 +304,7 @@
     else if ([segue.identifier isEqualToString:@"GoToRecipeDetail"])
     {
         BFRecipeDetailVC *detailVC = [segue destinationViewController];
-        BFRecipe *info = [self.recipeSets objectAtIndex:self.selectedIndex];
+        BFRecipe *info = self.recipeSets[self.selectedIndex];
         [detailVC setRecipeInfo:info];
     }
 }

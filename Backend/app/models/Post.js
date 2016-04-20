@@ -11,29 +11,19 @@ var mongoose = require('mongoose'),
 
 var Post = new Schema({
 
-    location                : { type: [Number], index: '2dsphere'},
-    radius                  : Number,
-    lastModifiedByOwner     : {type: Date, default: (function() { // Default to UTC for timestamp
-                                return Date.now();
-                            })()},
-    title                   : String,
-    status                  : Number,
-    message                 : String,
-    pictureUrl              : String,
-    requests				: [{type: ObjectId, ref: 'User'}],
-    imageUrl                : String,
-    type					: String,
-    capacity				: Number,
-    place                   : String,
-    likeCount				: [{type: ObjectId, ref: 'Like'}],
-    criteria                : Mixed,
+    recipeName              : String,
+    ingredients             : String,
+    portionSize             : String,
+    prepareTime             : String,
+    orderMode               : String,
+    price                   : String,
+    privacyTerms            : String,
+    imageURL                : {url:String, width:Number, height:Number},
     owner                   : {type: ObjectId, ref: 'User'},
-    // privateTo				: {type: ObjectId, ref: 'User'},
-    members             	: [{type: ObjectId, ref: 'User'}],
     timestamp               : {type: Date, default: (function() { // Default to UTC for timestamp
                                 return Date.now();
                             })()},
-    thread                  : [{type: ObjectId, ref: "Comment"}]
+    // radius                  : Number,
 }, {
 toObject: { virtuals: true },
 toJSON: { virtuals: true }
@@ -48,45 +38,44 @@ toJSON: { virtuals: true }
 //     }
 // };
 
-Post.pre('save', function(next) {
-    var now = new Date();
-    var that = this;
-    this.lastModifiedByOwner = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
-next();
-    // This seems to get registered before the rest of the file.  To avoid a race condition, add the require
-    // here.  Require uses an object cache so this will not affect performance by being called more than
-    // once.
-//     Comment = require('./Comment'),
-//     Comment.aggregate()
-//       .group({ _id: "$from"})
-//       .exec(function (err, res) {
-//         next();
+// Post.pre('save', function(next) {
+//     var now = new Date();
+//     var that = this;
+//     this.lastModifiedByOwner = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
+// next();
+//     // This seems to get registered before the rest of the file.  To avoid a race condition, add the require
+//     // here.  Require uses an object cache so this will not affect performance by being called more than
+//     // once.
+// //     Comment = require('./Comment'),
+// //     Comment.aggregate()
+// //       .group({ _id: "$from"})
+// //       .exec(function (err, res) {
+// //         next();
+// //     });
+
+// });
+
+// Post.virtual('numPosts').get(function() {
+//     return this.thread.length;
+//     // // [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", [FBuser objectID]];
+//     // var userPictureUrl = "http://graph.facebook.com/v2.0/" + this.id + "/picture?type=large";
+//     // console.log("****** User picture URL would be ", userPictureUrl);
+//     // console.log("User id = ", this.accessToken);
+//     // return userPictureUrl;
+// });
+
+// Post.pre('save', function(next) {
+//     var that = this;
+//     User = require('./User');
+//     var owner = User.findById(this.owner).exec(function(err, owner) {
+//         if (!err) {
+//                 next();
+//         } else {
+//             console.error(err);
+//             next();
+//         }
 //     });
-
-});
-
-Post.virtual('numPosts').get(function() {
-    return this.thread.length;
-    // // [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", [FBuser objectID]];
-    // var userPictureUrl = "http://graph.facebook.com/v2.0/" + this.id + "/picture?type=large";
-    // console.log("****** User picture URL would be ", userPictureUrl);
-    // console.log("User id = ", this.accessToken);
-    // return userPictureUrl;
-});
-
-Post.pre('save', function(next) {
-    var that = this;
-    User = require('./User');
-    var owner = User.findById(this.owner).exec(function(err, owner) {
-        if (!err) {
-
-                next();
-        } else {
-            console.error(err);
-            next();
-        }
-    });
-});
+// });
 
 module.exports = mongoose.model('Post', Post);
 

@@ -80,18 +80,25 @@
                     ];
     
     // recipeSets
-    NSInteger totalPrice = 0;
     for (NSDictionary *dict in result)
     {
         [self.orderedSets addObject:dict];
-        
+    }
+    
+    [self calcAllPrice];
+}
+
+- (void)calcAllPrice
+{
+    NSInteger totalPrice = 0;
+    for (NSDictionary *dict in self.orderedSets)
+    {
         NSInteger price = [dict[@"price"] substringWithRange:NSMakeRange(1, [dict[@"price"] length] - 1)].integerValue;
         totalPrice = totalPrice + price;
     }
     
     self.totalPriceLabel.text = [NSString stringWithFormat:@"$%ld", (long)totalPrice];
 }
-
 
 #pragma mark - TableView Delegate
 
@@ -137,7 +144,7 @@
     
     [cell.removeButton addTarget:self action:@selector(removeItem:) forControlEvents:UIControlEventTouchUpInside];
     cell.removeButton.tag = indexPath.row;
-    [self.indexSets setObject:indexPath forKey:[NSString stringWithFormat:@"%ld", (long)indexPath.row]];
+//    [self.indexSets setObject:indexPath forKey:[NSString stringWithFormat:@"%ld", (long)indexPath.row]];
     
 //    NSString *recipeImageURL = dict[@"imageURL"];
 //    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:recipeImageURL]
@@ -166,8 +173,11 @@
     NSInteger row = sender.tag;
     [self.orderedSets removeObjectAtIndex:row];
     
-    NSIndexPath *indexPath = [self.indexSets objectForKey:[NSString stringWithFormat:@"%ld", (long)row]];
-    [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    [self calcAllPrice];
+    [self.tableView reloadData];
+//    
+//    NSIndexPath *indexPath = [self.indexSets objectForKey:[NSString stringWithFormat:@"%ld", (long)row]];
+//    [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 

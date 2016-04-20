@@ -20,8 +20,9 @@
 @property (strong, nonatomic) IBOutlet UIImageView *sellerRatingImageView;
 @property (strong, nonatomic) IBOutlet UILabel *sellerReviewsLabel;
 
-@property (strong, nonatomic) IBOutlet UILabel *recipeContentLabel;
+@property (strong, nonatomic) IBOutlet UILabel *recipeIngredientsLabel;
 @property (strong, nonatomic) IBOutlet UILabel *recipePrepareTimeLabel;
+@property (strong, nonatomic) IBOutlet UILabel *recipePortionSizeLabel;
 
 @end
 
@@ -32,16 +33,17 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-//    BFUser *seller = self.recipeInfo.recipeSeller;
-//    self.sellerPictureImageView.image = [UIImage imageNamed:seller.sellerPictureURL];
-//    self.sellerNameLabel.text = [NSString stringWithFormat:@"@%@ is a chef", seller.sellerFirstName];
-//    //    self.sellerRatingImageView.image = seller.sellerRating
-//    self.sellerRatingImageView.image = [UIImage imageNamed:seller.sellerRating];
-//    self.sellerReviewsLabel.text = [seller.sellerReviews stringByAppendingString:@" reviews"];
-//    
-//    self.recipeContentLabel.text = self.recipeInfo.recipeContents;
-//    self.recipePrepareTimeLabel.text = self.recipeInfo.prepareTime;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    BFUser *seller = self.recipeInfo.owner;
+    self.sellerPictureImageView.image = seller.profileImage;
+    self.sellerNameLabel.text = [NSString stringWithFormat:@"@%@ is a chef", seller.username];
+
+    self.recipeIngredientsLabel.text = self.recipeInfo.ingredients;
+    self.recipePrepareTimeLabel.text = self.recipeInfo.prepareTime;
+    self.recipePortionSizeLabel.text = self.recipeInfo.portionSize;
 }
 
 - (void)didReceiveMemoryWarning
@@ -67,13 +69,8 @@
 
 - (IBAction)onClickRecipeOrder:(id)sender
 {
-    //    UIButton *selectedButton = (UIButton *)sender;
-    //    selectedRow = (selectedButton.tag - 1) / 10;
-    //    NSLog(@"Selected Row Index : %ld", (long)selectedRow);
-    
     [self performSegueWithIdentifier:@"GoToRecipeOrder" sender:sender];
 }
-
 
 
 #pragma mark - Navigation
@@ -87,7 +84,7 @@
     else if ([segue.identifier isEqualToString:@"GoToSellerInfo"])
     {
         BFSellerInfoVC *sellerVC = [segue destinationViewController];
-//        [sellerVC setSellerInfo:self.recipeInfo.recipeSeller];
+        [sellerVC setSellerInfo:self.recipeInfo.owner];
     }
     else if ([segue.identifier isEqualToString:@"GoToRecipeOrder"])
     {

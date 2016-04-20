@@ -10,6 +10,4 @@
 
 @interface BFUserVC : UIViewController
 
-//@property (strong, nonatomic) BFBuyer *buyer;
-
 @end

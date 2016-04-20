@@ -8,19 +8,28 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "BFUser.h"
 
 
 @interface BFRecipe : NSObject
 
 @property (strong, nonatomic) NSString *recipeName;
-@property (strong, nonatomic) NSString *recipeImageURL;
-@property (strong, nonatomic) NSString *recipeContents;
-@property (strong, nonatomic) NSString *recipeDescription;
-@property (strong, nonatomic) NSString *recipePrice;
+@property (strong, nonatomic) NSString *ingredients;
+@property (strong, nonatomic) NSString *portionSize;
 @property (strong, nonatomic) NSString *prepareTime;
+@property (strong, nonatomic) NSString *orderMode;
+@property (strong, nonatomic) NSString *price;
+@property (strong, nonatomic) NSString *privacyTerms;
+@property (strong, nonatomic) NSString *imageURL;
+@property (strong, nonatomic) NSString *imageWidth;
+@property (strong, nonatomic) NSString *imageHeight;
+@property (strong, nonatomic) UIImage *image;
 
-//@property (strong, nonatomic) BFSeller *recipeSeller;
+@property (nonatomic) BOOL wantsNewImage;
 
+@property (strong, nonatomic) BFUser *owner;
+
++ (BFRecipe *)recipeWithDictionary:(NSDictionary *)recipeDict;
 - (instancetype)initWithDictionary:(NSDictionary *)recipeDict;
 - (void)configureWithDictionary:(NSDictionary *)recipeDict;
 

@@ -17,10 +17,10 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *recipeName;
 @property (strong, nonatomic) IBOutlet UILabel *prepareTime;
-@property (strong, nonatomic) IBOutlet UILabel *recipeDesc;
+@property (strong, nonatomic) IBOutlet UILabel *ingredients;
 @property (strong, nonatomic) IBOutlet UILabel *price;
 
-@property (strong, nonatomic) IBOutlet UIImageView *profileImage;
+@property (strong, nonatomic) IBOutlet UIImageView *profileImageView;
 @property (strong, nonatomic) IBOutlet UIButton *btnProfile;
 
 @end

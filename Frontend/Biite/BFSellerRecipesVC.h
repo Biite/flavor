@@ -1,5 +1,5 @@
 //
-//  BFRecipesInfoVC.h
+//  BFSellerRecipesVC.h
 //  Biite
 //
 //  Created by JRRJ on 3/11/16.
@@ -10,7 +10,7 @@
 #import "BFRecipe.h"
 
 
-@interface BFRecipesInfoVC : UIViewController
+@interface BFSellerRecipesVC : UIViewController
 
 @property (strong, nonatomic) BFRecipe *recipeInfo;
 

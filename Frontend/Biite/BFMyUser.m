@@ -205,15 +205,15 @@ withCompletionHandler:(void (^)(NSError *error, BFMyUser *sharedUser))completion
     {
         if(completionHandler)
         {
-            dispatch_async(dispatch_get_main_queue(), ^{
+//            dispatch_async(dispatch_get_main_queue(), ^{
                 completionHandler(nil, nil);
-            });
+//            });
         }
         return;
     }
     
     [BFAPI loginWithFB:[BFFacebookUtils accessTokenInfo] withCompletionHandler:^(NSError *error, id result) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+//        dispatch_async(dispatch_get_main_queue(), ^{
             if (error)
             {
                 completionHandler(error,nil);
@@ -232,7 +232,7 @@ withCompletionHandler:(void (^)(NSError *error, BFMyUser *sharedUser))completion
                     completionHandler(error,sharedUser);
                 }
             }
-        });
+//        });
     }];
 }
 
@@ -283,9 +283,9 @@ withCompletionHandler:(void (^)(NSError *error, BFMyUser *sharedUser))completion
     {
         if(completionHandler)
         {
-            dispatch_async(dispatch_get_main_queue(), ^{
+//            dispatch_async(dispatch_get_main_queue(), ^{
                 completionHandler(nil);
-            });
+//            });
         }
         return;
     }
@@ -302,7 +302,7 @@ withCompletionHandler:(void (^)(NSError *error, BFMyUser *sharedUser))completion
                  
                  [BFAPI linkFacebook:extID withCompletionHandler:^(NSError *error, id result)
                   {
-                      dispatch_async(dispatch_get_main_queue(), ^{
+//                      dispatch_async(dispatch_get_main_queue(), ^{
                           if (error)
                           {
                               completionHandler(error);
@@ -313,7 +313,7 @@ withCompletionHandler:(void (^)(NSError *error, BFMyUser *sharedUser))completion
                               [self syncDataCore];
                               completionHandler(error);
                           }
-                      });
+//                      });
                   }];
              }
          }

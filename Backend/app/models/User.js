@@ -20,6 +20,7 @@ var User = new Schema({
     biography			: String,
     profileImageURL     : String,
     coverImageURL       : String,
+    
     location            : { type: [Number], index: '2dsphere', default: [0, 0]},
     favorites           : [{type: ObjectId, ref: 'User'}],
     // numNotif			: Number,

@@ -1,7 +1,8 @@
 var User = require('../../models/User'),
     _ = require('underscore'),
     path = require("path"),
-    Notification = require('../../models/Notification'),
+    // Notification = require('../../models/Notification'),
+    Review = require('../../models/Review'),
     util = require('../../util/utils'),
 	pushUtils = require('../../util/pushUtils'),
     q = require('q'),
@@ -58,8 +59,7 @@ opts.secretOrKey = 'biite';
 opts.algorithms = ["HS256"];
 passport.use(
 	new JwtStrategy(opts,
-			function(jwt_payload, done) {			    
-
+			function(jwt_payload, done) {	
 				User.findOne({"_id": jwt_payload._id}, function(err, user) {
 					if (err) {
 						done(err, false);
@@ -396,6 +396,7 @@ var api = {
                       pass: 'biite2016'
                     }
                   });
+
                   var mailOptions = {
                     to: user.email,
                     from: 'Biite Inc. <tarperkpp@gmail.com>',
@@ -405,7 +406,9 @@ var api = {
                       'http://' + req.headers.host + '/v1.0/user/resetpass/' + token + '\n\n' +
                       'If you did not request this, please ignore this email and your password will remain unchanged.\n'
                   };
+
                   smtpTransport.sendMail(mailOptions, function(err) {
+                        console.log('Sending Email');
                         
                         if(err){
                             console.log(err);
@@ -555,6 +558,18 @@ var api = {
         }
     },
 
+    userFromUT: function(req, res, next){
+            // User.find({
+            //     "following": req.user._id
+            // },{_id:1})
+            // .exec(function(err, users) {
+            //     req.user.followers = users;
+                res.send(util.success({
+                    user: req.user
+                }));    
+            // });
+    },
+    
     updateLocation: function(req, res, next) {
         var latitude = req.param('latitude'),
             longitude = req.param('longitude'),
@@ -833,7 +848,7 @@ var api = {
                     else {
                         var i = req.user.favorites.indexOf(user._id);                                                                   
                                                                     
-                        if(j != -1) {
+                        if(i != -1) {
                             user.save(function(err, user) {
                                 req.user.favorites.splice(i,1);
                                 req.user.save(function(err,myuser){
@@ -962,6 +977,15 @@ module.exports = {
         method: api.changePassword,
         verb: 'post',
         route: '/user/changepass',
+        middleware: [
+            passport.authenticate('jwt', {
+                session: false
+            })
+        ]  
+    }, {
+        method: api.userFromUT,
+        verb: 'post',
+        route: '/user',
         middleware: [
             passport.authenticate('jwt', {
                 session: false

@@ -11,18 +11,19 @@
 #import "BFRecipe.h"
 #import "BFMyUser.h"
 #import "BFUser.h"
-#import "BFRecipesInfoVC.h"
+#import "BFAPI.h"
+#import "BFSellerRecipesVC.h"
 #import "BFSellerInfoVC.h"
 #import "BFLoginVC.h"
 #import "BFUserVC.h"
 #import "BFOrderMenuVC.h"
 #import "BFSearchFilterVC.h"
 #import <SDWebImage/SDWebImageManager.h>
+#import <SVProgressHUD.h>
 
 
 @interface BFRecipesExploreVC () <UITableViewDataSource, UITableViewDelegate>
 
-//@property (strong, atomic) NSMutableOrderedSet *recipeSets;
 @property (strong, atomic) NSMutableArray *recipeSets;
 
 @property (strong, nonatomic) IBOutlet UITableView *recipesTableView;
@@ -37,8 +38,11 @@
 {
     [super viewDidLoad];
     
-//    self.recipeSets = [NSMutableOrderedSet new];
     self.recipeSets = [[NSMutableArray alloc] init];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
     [self getRecipes];
 }
 
@@ -46,6 +50,34 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)getRecipes
+{
+    [SVProgressHUD show];
+    
+    [self.recipeSets removeAllObjects];
+    
+    [BFAPI getAllRecipesWithCompletionHandler:^(NSError *error, id result)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SVProgressHUD dismiss];
+            
+            if (!error)
+            {
+                for (NSDictionary *dict in result[@"posts"])
+                {
+                    BFRecipe *recipe = [[BFRecipe alloc] initWithDictionary:dict];
+                    [self.recipeSets addObject:recipe];
+                }
+                
+                [self.recipesTableView reloadData];
+            }
+            else
+            {                
+            }
+        });
+    }];
 }
 
 - (IBAction)showSetting:(id)sender
@@ -68,112 +100,6 @@
 - (IBAction)showSearchFilter:(id)sender
 {
     [self performSegueWithIdentifier:@"GoToSearchFilter" sender:sender];
-}
-
-- (void)getRecipes
-{
-    // API call
-    NSArray *result = @[@{
-                            @"name": @"Paella Valenciana",
-                            //                             @"imageURL": @"http://cloudniary.com/a.jpg",
-                            @"imageURL": @"sample_recipe_img0",
-                            //                             @"description": @"with fresh seafood and real azafron",
-                            @"description": @"This tasty paella has a bit of everything! Wonderfully comforting, flavoursome and colourful.",
-                            @"contents": @"Rice, azafron, clams, shrimp, fish, red peppers, onions, garlic, sweet peas, tomatos, olive oil salt and pepper",
-                            @"price": @"$25",
-                            @"prepareTime": @"45",
-                            @"seller": @{
-                                    @"name": @"Ricardo Barden",
-                                    @"firstName": @"Ricardo",
-                                    @"lastName": @"Barden",
-                                    //                                         @"pictureURL": @"http://cloudniary.com/profile.jpg",
-                                    //                                         @"backgroundURL": @"http://cloudniary.com/profile.jpg",
-                                    @"pictureURL": @"sample_profile_img0",
-                                    @"backgroundURL": @"profile_background",
-                                    @"location": @"Perez McFarland",
-                                    @"careers": @"Born in Barcelona, raised in Denver, loves the flavors from the Catelan suisine and seafood in general. This text box should push the content underneath depending on the length.",
-                                    //                                         @"rating": @"4.0",
-                                    @"rating": @"rating_score_img",
-                                    @"reviews": @"46",
-                                    }
-                            },
-                        @{
-                            @"name": @"Scallop noodles",
-                            //                             @"imageURL": @"http://cloudniary.com/a.jpg",
-                            @"imageURL": @"sample_recipe_img1",
-                            //                             @"description": @"with fresh seafood and real azafron",
-                            @"description": @"This tasty paella has a bit of everything! Wonderfully comforting, flavoursome and colourful.",
-                            @"contents": @"Rice, azafron, clams, shrimp, fish, red peppers, onions, garlic, sweet peas, tomatos, olive oil salt and pepper",
-                            @"price": @"$35",
-                            @"prepareTime": @"55",
-                            @"seller": @{
-                                    @"name": @"Ricardo Barden",
-                                    @"firstName": @"Ricardo",
-                                    @"lastName": @"Barden",
-                                    //                                         @"pictureURL": @"http://cloudniary.com/profile.jpg",
-                                    @"pictureURL": @"sample_profile_img0",
-                                    @"backgroundURL": @"profile_background",
-                                    @"location": @"Perez McFarland",
-                                    @"careers": @"Born in Barcelona, raised in Denver, loves the flavors from the Catelan suisine and seafood in general. This text box should push the content underneath depending on the length.",
-                                    //                                         @"rating": @"4.0",
-                                    @"rating": @"rating_score_img",
-                                    @"reviews": @"46",
-                                    }
-                            },
-                        @{
-                            @"name": @"Paella Valenciana",
-                            //                             @"imageURL": @"http://cloudniary.com/a.jpg",
-                            @"imageURL": @"sample_recipe_img0",
-                            //                             @"description": @"with fresh seafood and real azafron",
-                            @"description": @"This tasty paella has a bit of everything! Wonderfully comforting, flavoursome and colourful.",
-                            @"contents": @"Rice, azafron, clams, shrimp, fish, red peppers, onions, garlic, sweet peas, tomatos, olive oil salt and pepper",
-                            @"price": @"$25",
-                            @"prepareTime": @"45",
-                            @"seller": @{
-                                    @"name": @"Ricardo Barden",
-                                    @"firstName": @"Ricardo",
-                                    @"lastName": @"Barden",
-                                    //                                         @"pictureURL": @"http://cloudniary.com/profile.jpg",
-                                    @"pictureURL": @"sample_profile_img1",
-                                    @"backgroundURL": @"profile_background",
-                                    @"location": @"Perez McFarland",
-                                    @"careers": @"Born in Barcelona, raised in Denver, loves the flavors from the Catelan suisine and seafood in general. This text box should push the content underneath depending on the length.",
-                                    //                                         @"rating": @"4.0",
-                                    @"rating": @"rating_score_img",
-                                    @"reviews": @"43",
-                                    }
-                            },
-                        @{
-                            @"name": @"Scallop noodles",
-                            //                             @"imageURL": @"http://cloudniary.com/a.jpg",
-                            @"imageURL": @"sample_recipe_img1",
-                            //                             @"description": @"with fresh seafood and real azafron",
-                            @"description": @"This tasty paella has a bit of everything! Wonderfully comforting, flavoursome and colourful.",
-                            @"contents": @"Rice, azafron, clams, shrimp, fish, red peppers, onions, garlic, sweet peas, tomatos, olive oil salt and pepper",
-                            @"price": @"$35",
-                            @"prepareTime": @"55",
-                            @"seller": @{
-                                    @"name": @"Ricardo Barden",
-                                    @"firstName": @"Ricardo",
-                                    @"lastName": @"Barden",
-                                    //                                         @"pictureURL": @"http://cloudniary.com/profile.jpg",
-                                    @"pictureURL": @"sample_profile_img1",
-                                    @"backgroundURL": @"profile_background",
-                                    @"location": @"Perez McFarland",
-                                    @"careers": @"Born in Barcelona, raised in Denver, loves the flavors from the Catelan suisine and seafood in general. This text box should push the content underneath depending on the length.",
-                                    //                                         @"rating": @"4.0",
-                                    @"rating": @"rating_score_img",
-                                    @"reviews": @"43",
-                                    }
-                            }
-                        ];
-    
-    // recipeSets
-    for (NSDictionary *dict in result)
-    {
-        BFRecipe *recipe = [[BFRecipe alloc] initWithDictionary:dict];
-        [self.recipeSets addObject:recipe];
-    }
 }
 
 
@@ -205,50 +131,41 @@
     
     cell.recipeName.text = recipe.recipeName;
     cell.prepareTime.text = [recipe.prepareTime stringByAppendingString:@" mins"];
-    cell.recipeDesc.text = recipe.recipeDescription;
-    cell.price.text = recipe.recipePrice;
+    cell.ingredients.text = recipe.ingredients;
+    
+    NSString *price = @"$";
+    cell.price.text = [price stringByAppendingString:recipe.price];
     
     cell.btnRecipe.tag = indexPath.row;
-    [cell.btnRecipe addTarget:self action:@selector(displayRecipesInfo:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.btnRecipe addTarget:self action:@selector(displaySellerRecipes:) forControlEvents:UIControlEventTouchUpInside];
     
     cell.btnProfile.tag = indexPath.row;
     [cell.btnProfile addTarget:self action:@selector(displaySellerInfo:) forControlEvents:UIControlEventTouchUpInside];
     
-//    NSString *recipeImageURL = recipe.recipeImageURL;
-//    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:recipeImageURL]
-//                                                    options:SDWebImageRefreshCached
-//                                                   progress:nil
-//                                                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL)
-//     {
-//         if (image != NULL)
-//         {
-//             cell.recipeImage.image = image;
-//         }
-//     }];
-    cell.recipeImage.image = [UIImage imageNamed:recipe.recipeImageURL];
+    NSString *recipeImageURL = recipe.imageURL;
+    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:recipeImageURL]
+                                                    options:SDWebImageRefreshCached
+                                                   progress:nil
+                                                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL)
+     {
+         if (image != NULL)
+         {
+             cell.recipeImage.image = image;
+         }
+     }];
     
-//    NSString *profileImageURL = recipe.recipeSeller.sellerPictureURL;
-//    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:profileImageURL]
-//                                                    options:SDWebImageRefreshCached
-//                                                   progress:nil
-//                                                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL)
-//    {
-//        if (image != NULL)
-//        {
-//            cell.profileImage.image = image;
-//        }
-//    }];
-    
-    
-//    cell.profileImage.image = [UIImage imageNamed:recipe.recipeSeller.sellerPictureURL];
+    cell.profileImageView.image = recipe.owner.profileImage;
+//    [recipe.owner retrieveProfileImageWithCompletionHandler:^(NSError *error, UIImage *image, id result) {
+//        cell.profileImageView.image = image;
+//    } andKey:nil];
     
     return cell;
 }
 
-- (void)displayRecipesInfo:(UIButton *)sender
+- (void)displaySellerRecipes:(UIButton *)sender
 {
     self.selectedIndex = sender.tag;
-    [self performSegueWithIdentifier:@"GoToRecipesInfo" sender:sender];
+    [self performSegueWithIdentifier:@"GoToSellerRecipes" sender:sender];
 }
 
 - (void)displaySellerInfo:(UIButton *)sender
@@ -291,9 +208,9 @@
     else if ([segue.identifier isEqualToString:@"GoToOrderMenu"])
     {
     }
-    else if ([segue.identifier isEqualToString:@"GoToRecipesInfo"])
+    else if ([segue.identifier isEqualToString:@"GoToSellerRecipes"])
     {
-        BFRecipesInfoVC *detailVC = [segue destinationViewController];
+        BFSellerRecipesVC *detailVC = [segue destinationViewController];
         BFRecipe *recipe = [self.recipeSets objectAtIndex:self.selectedIndex];
         [detailVC setRecipeInfo:recipe];
     }
@@ -301,7 +218,7 @@
     {
         BFSellerInfoVC *sellerVC = [segue destinationViewController];
         BFRecipe *recipe = [self.recipeSets objectAtIndex:self.selectedIndex];
-//        [sellerVC setSellerInfo:recipe.recipeSeller];
+        [sellerVC setSellerInfo:recipe.owner];
     }
 }
 
