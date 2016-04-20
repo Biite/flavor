@@ -1,0 +1,12 @@
+platform :ios, '9.0'
+
+pod 'SDWebImage'
+pod 'SVProgressHUD', :head
+pod 'AFNetworking'
+pod 'Reachability'
+pod 'DateTools'
+pod 'MCSwipeTableViewCell'
+pod 'SVPullToRefresh'
+pod 'EXPhotoViewer'
+pod 'TOCropViewController'
+pod 'CocoaLumberjack'
